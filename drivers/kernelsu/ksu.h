@@ -4,7 +4,8 @@
 #include "linux/types.h"
 #include "linux/workqueue.h"
 
-#define KERNEL_SU_VERSION KSU_VERSION
+#define KERNEL_SU_VERSION 11309
+
 #define KERNEL_SU_OPTION 0xDEADBEEF
 
 #define CMD_GRANT_ROOT 0
