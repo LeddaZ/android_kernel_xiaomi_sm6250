@@ -111,7 +111,7 @@ fi
 
 if [ ! -d "${KDIR}/anykernel3/" ]; then
     echo "Cloning AnyKernel3..."
-    git clone --depth=1 https://github.com/LeddaZ/AnyKernel3 -b miatoll anykernel3
+    git clone --depth=1 https://github.com/LeddaZ/AnyKernel3 -b miatoll-ksu anykernel3
 fi
 
 # A function to exit on SIGINT.
@@ -181,7 +181,7 @@ mod() {
     echo -e "\n\e[1;32m[✓] Built Modules! \e[0m"
 }
 
-zipn="Kiki-miatoll-$(date '+%Y%m%d-%H%M').zip"
+zipn="Kiki-KSU-miatoll-$(date '+%Y%m%d-%H%M').zip"
 if test -z "$(git rev-parse --show-cdup 2>/dev/null)" &&
    head=$(git rev-parse --verify HEAD 2>/dev/null); then
         zipn="${zipn::-4}-$(echo $head | cut -c1-8).zip"
