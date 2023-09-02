@@ -42,9 +42,6 @@ export REPO_URL="https://github.com/LeddaZ/android_kernel_xiaomi_sm6250"
 COMMIT_HASH=$(git rev-parse --short HEAD)
 export COMMIT_HASH
 
-# Necessary variables to be exported.
-export version
-
 # Number of jobs to run.
 PROCS=$(nproc --all)
 export PROCS
