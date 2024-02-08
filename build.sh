@@ -109,9 +109,9 @@ elif [[ "${COMPILER}" = clang ]]; then
     )
 fi
 
-if [ ! -d "${KDIR}/anykernel3/" ]; then
+if [ ! -d "${KDIR}/AnyKernel3/" ]; then
     echo "Cloning AnyKernel3..."
-    git clone --depth=1 https://github.com/LeddaZ/AnyKernel3 -b miatoll anykernel3
+    git clone --depth=1 https://github.com/LeddaZ/AnyKernel3 -b miatoll AnyKernel3
 fi
 
 # A function to exit on SIGINT.
@@ -177,7 +177,7 @@ mod() {
     make "${MAKE[@]}" modules_prepare
     make -j"$PROCS" "${MAKE[@]}" modules INSTALL_MOD_PATH="${KDIR}"/out/modules
     make "${MAKE[@]}" modules_install INSTALL_MOD_PATH="${KDIR}"/out/modules
-    find "${KDIR}"/out/modules -type f -iname '*.ko' -exec cp {} "${KDIR}"/anykernel3/modules/system/lib/modules/ \;
+    find "${KDIR}"/out/modules -type f -iname '*.ko' -exec cp {} "${KDIR}"/AnyKernel3/modules/system/lib/modules/ \;
     echo -e "\n\e[1;32m[✓] Built Modules! \e[0m"
 }
 
@@ -190,11 +190,11 @@ fi
 # A function to build an AnyKernel3 zip.
 mkzip() {
     echo -e "\n\e[1;93m[*] Building zip! \e[0m"
-    mkdir -p "${KDIR}"/anykernel3/dtbs
-    mv "${KDIR}"/out/arch/arm64/boot/dtbo.img "${KDIR}"/anykernel3
-    mv "${KDIR}"/out/arch/arm64/boot/dtb.img "${KDIR}"/anykernel3
-    mv "${KDIR}"/out/arch/arm64/boot/Image "${KDIR}"/anykernel3
-    cd "${KDIR}"/anykernel3 || exit 1
+    cp "${KDIR}"/out/arch/arm64/boot/dtbo.img "${KDIR}"/AnyKernel3
+    cp "${KDIR}"/out/arch/arm64/boot/dtb.img "${KDIR}"/AnyKernel3
+    cp "${KDIR}"/out/arch/arm64/boot/Image "${KDIR}"/AnyKernel3
+    cp "${KDIR}"/out/arch/arm64/boot/dts/qcom/cust-atoll-ab.dtb "${KDIR}"/AnyKernel3/dtb
+    cd "${KDIR}"/AnyKernel3 || exit 1
     zip -r9 "$zipn" . -x ".git*" -x "README.md" -x "LICENSE" -x "*.zip"
     echo -e "\n\e[1;32m[✓] Built zip! \e[0m"
 }
@@ -222,7 +222,7 @@ example: $0 --obj=kernel/sched/
 	 img    Builds Kernel
 	 dtb    Builds dtb(o).img
 	 mod    Builds out-of-tree modules
-	 mkzip  Builds anykernel3 zip
+	 mkzip  Builds AnyKernel3 zip
 	 --obj  Builds specific driver/subsystem
 	 rgn    Regenerates defconfig"
 }
