@@ -136,7 +136,7 @@ kernel/configs/android-*.cfg
 #
 Android.bp
 
-anykernel3/
+AnyKernel3/
 gcc32/
 gcc64/
 log.txt

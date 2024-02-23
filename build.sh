@@ -20,7 +20,7 @@ KDIR=$(pwd)
 export KDIR
 
 # Default linker to use for builds.
-export LINKER="ld.lld"
+export LINKER="ld"
 
 # Device name.
 export DEVICE="Xiaomi SD720G Family"
@@ -53,14 +53,18 @@ export COMPILER=gcc
 if [[ "${COMPILER}" = gcc ]]; then
     if [ ! -d "${KDIR}/gcc64" ]; then
         echo "Downloading arm64 gcc..."
-        curl -sL https://github.com/mvaisakh/gcc-arm64/archive/refs/heads/gcc-master.tar.gz | tar -xzf -
-        mv "${KDIR}"/gcc-arm64-gcc-master "${KDIR}"/gcc64
+        curl -s https://api.github.com/repos/mvaisakh/gcc-build/releases/latest | grep "eva-gcc-arm64-" | cut -d : -f 2,3 | tr -d \" | wget -O gcc-arm64.xz -qi -
+        tar -xf gcc-arm64.xz
+        rm gcc-arm64.xz
+        mv "${KDIR}"/gcc-arm64 "${KDIR}"/gcc64
     fi
 
     if [ ! -d "${KDIR}/gcc32" ]; then
         echo "Downloading arm gcc..."
-        curl -sL https://github.com/mvaisakh/gcc-arm/archive/refs/heads/gcc-master.tar.gz | tar -xzf -
-        mv "${KDIR}"/gcc-arm-gcc-master "${KDIR}"/gcc32
+        curl -s https://api.github.com/repos/mvaisakh/gcc-build/releases/latest | grep "eva-gcc-arm-" | cut -d : -f 2,3 | tr -d \" | wget -O gcc-arm.xz -qi -
+        tar -xf gcc-arm.xz
+        rm gcc-arm.xz
+        mv "${KDIR}"/gcc-arm "${KDIR}"/gcc32
     fi
 
     KBUILD_COMPILER_STRING=$("${KDIR}"/gcc64/bin/aarch64-elf-gcc --version | head -n 1)
