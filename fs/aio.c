@@ -1477,7 +1477,7 @@ static int aio_prep_rw(struct kiocb *req, struct iocb *iocb)
 		return -EBADF;
 	req->ki_complete = aio_complete_rw;
 	req->ki_pos = iocb->aio_offset;
-	req->ki_flags = iocb_flags(req->ki_filp);
+	req->ki_flags = iocb_flags(req->ki_filp) | IOCB_AIO_RW;
 	if (iocb->aio_flags & IOCB_FLAG_RESFD)
 		req->ki_flags |= IOCB_EVENTFD;
 	req->ki_hint = ki_hint_validate(file_write_hint(req->ki_filp));
@@ -1647,16 +1647,6 @@ static int io_submit_one(struct kioctx *ctx, struct iocb __user *user_iocb,
 	req = aio_get_req(ctx);
 	if (unlikely(!req))
 		return -EAGAIN;
-
-	req->common.ki_filp = file = fget(iocb->aio_fildes);
-	if (unlikely(!req->common.ki_filp)) {
-		ret = -EBADF;
-		goto out_put_req;
-	}
-	req->common.ki_pos = iocb->aio_offset;
-	req->common.ki_complete = aio_complete;
-	req->common.ki_flags = iocb_flags(req->common.ki_filp) | IOCB_AIO_RW;
-	req->common.ki_hint = file_write_hint(file);
 
 	if (iocb->aio_flags & IOCB_FLAG_RESFD) {
 		/*
