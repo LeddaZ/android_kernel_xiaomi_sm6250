@@ -112,7 +112,7 @@ fi
 
 export KBUILD_BUILD_USER="leddaz"
 export KBUILD_BUILD_HOST="stargazer"
-zipn="Kiki-miatoll-$(date '+%Y%m%d-%H%M').zip"
+zipn="Nitro-miatoll-$(date '+%Y%m%d-%H%M').zip"
 if test -z "$(git rev-parse --show-cdup 2>/dev/null)" &&
    head=$(git rev-parse --verify HEAD 2>/dev/null); then
         zipn="${zipn::-4}-$(echo $head | cut -c1-8).zip"
@@ -199,7 +199,7 @@ mkzip() {
 	mv "${KDIR}"/out/arch/arm64/boot/dtb.img "${KDIR}"/AnyKernel3
 	mv "${KDIR}"/out/arch/arm64/boot/Image "${KDIR}"/AnyKernel3
 	cd "${KDIR}"/AnyKernel3 || exit 1
-	zip -r9 "$zipn".zip . -x ".git*" -x "README.md" -x "LICENSE" -x "*.zip"
+	zip -r9 "$zipn" . -x ".git*" -x "README.md" -x "LICENSE" -x "*.zip"
 	echo -e "\n\e[1;32m[✓] Built zip! \e[0m"
 }
 
