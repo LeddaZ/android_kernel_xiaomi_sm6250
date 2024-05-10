@@ -416,4 +416,3 @@ for arg in "$@"; do
 		;;
 	esac
 done
-s
