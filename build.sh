@@ -144,7 +144,7 @@ rgn() {
 mcfg() {
 	rgn
 	echo -e "\n\e[1;93m[*] Making Menuconfig! \e[0m"
-	make "${MAKE[@]}" menuconfig
+	make "${MAKE[@]}" nconfig
 	cp -rf "${KDIR}"/out/.config "${KDIR}"/arch/arm64/configs/$CONFIG
 	echo -e "\n\e[1;32m[✓] Saved Modifications! \e[0m"
 }
