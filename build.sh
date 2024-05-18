@@ -140,10 +140,19 @@ rgn() {
 	echo -e "\n\e[1;32m[✓] Defconfig regenerated! \e[0m"
 }
 
-# A function to open a menu based program to update current config.
+# A function to open menuconfig to update current config.
 mcfg() {
 	rgn
 	echo -e "\n\e[1;93m[*] Making Menuconfig! \e[0m"
+	make "${MAKE[@]}" menuconfig
+	cp -rf "${KDIR}"/out/.config "${KDIR}"/arch/arm64/configs/$CONFIG
+	echo -e "\n\e[1;32m[✓] Saved Modifications! \e[0m"
+}
+
+# A function to open nconfig to update current config.
+ncfg() {
+	rgn
+	echo -e "\n\e[1;93m[*] Making Nconfig! \e[0m"
 	make "${MAKE[@]}" nconfig
 	cp -rf "${KDIR}"/out/.config "${KDIR}"/arch/arm64/configs/$CONFIG
 	echo -e "\n\e[1;32m[✓] Saved Modifications! \e[0m"
@@ -224,6 +233,7 @@ example: bash $0 --obj=kernel/sched/
 example: bash $0 --upr=r16
 
 	 mcfg   Runs make menuconfig
+	 ncfg   Runs make nconfig
 	 img    Builds Kernel
 	 dtb    Builds dtb(o).img
 	 mod    Builds out-of-tree modules
@@ -245,11 +255,12 @@ ndialog() {
 		2 "Build DTBs"
 		3 "Build modules"
 		4 "Open menuconfig"
-		5 "Regenerate defconfig"
-		6 "Build AnyKernel3 zip"
-		7 "Build a specific object"
-		8 "Clean"
-		9 "Exit"
+		5 "Open nconfig"
+		6 "Regenerate defconfig"
+		7 "Build AnyKernel3 zip"
+		8 "Build a specific object"
+		9 "Clean"
+		10 "Exit"
 	)
 	CHOICE=$(dialog --clear \
 		--backtitle "$BACKTITLE" \
@@ -310,7 +321,7 @@ ndialog() {
 		;;
 	5)
 		clear
-		rgn
+		ncfg
 		echo -ne "\e[1mPress enter to continue or 0 to exit! \e[0m"
 		read -r a1
 		if [ "$a1" == "0" ]; then
@@ -321,7 +332,8 @@ ndialog() {
 		fi
 		;;
 	6)
-		mkzip
+		clear
+		rgn
 		echo -ne "\e[1mPress enter to continue or 0 to exit! \e[0m"
 		read -r a1
 		if [ "$a1" == "0" ]; then
@@ -332,6 +344,17 @@ ndialog() {
 		fi
 		;;
 	7)
+		mkzip
+		echo -ne "\e[1mPress enter to continue or 0 to exit! \e[0m"
+		read -r a1
+		if [ "$a1" == "0" ]; then
+			exit 0
+		else
+			clear
+			ndialog
+		fi
+		;;
+	8)
 		dialog --inputbox --stdout "Enter object path: " 15 50 | tee .f
 		ob=$(cat .f)
 		if [ -z "$ob" ]; then
@@ -349,7 +372,7 @@ ndialog() {
 			ndialog
 		fi
 		;;
-	8)
+	9)
 		clear
 		clean
 		img
@@ -362,7 +385,7 @@ ndialog() {
 			ndialog
 		fi
 		;;
-	9)
+	10)
 		echo -e "\n\e[1m Exiting YAKB...\e[0m"
 		sleep 3
 		exit 0
@@ -378,6 +401,9 @@ for arg in "$@"; do
 	case "${arg}" in
 	"mcfg")
 		mcfg
+		;;
+	"ncfg")
+		ncfg
 		;;
 	"img")
 		img
